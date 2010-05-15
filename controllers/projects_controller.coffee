@@ -1,6 +1,6 @@
 class ProjectsController extends Chester.Controller
   _index: (params) ->
-    params.projects: Chester._('app').Models._('Project')._all()
+    params.projects: @parent.Models._('Project')._all()
     @find('index').render params
     
   _new: (params) ->
