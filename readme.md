@@ -2,6 +2,10 @@
 
 This example is a simple projects and tasks example.
 
+## Update
+
+This is a work in progress it does not function, but it should give you an idea of how to structure your coffeescript for the Chester Framework.
+
 ## How to install
 
 Assuming you have your Ti Env setup:
