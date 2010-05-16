@@ -19,10 +19,13 @@
     return this.find('new').render(params);
   };
   ProjectsController.prototype._create = function _create(params) {
+    Ti.API.info('Create Called');
     params.project = this.parent.Models._('Project')._create(params.project);
     if (params.project.errors) {
+      Ti.API.info('Render New');
       return this.find('new').render(params);
     } else {
+      Ti.API.info('Render Show');
       return this.find('show').render(params);
     }
   };

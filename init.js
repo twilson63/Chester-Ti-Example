@@ -13,7 +13,7 @@
     Ti.include(c);
   }
   prj_views = 'views/projects/';
-  _h = [prj_views + 'index.js', prj_views + 'new.js'];
+  _h = [prj_views + 'index.js', prj_views + 'new.js', prj_views + 'show.js'];
   for (_g = 0, _i = _h.length; _g < _i; _g++) {
     v = _h[_g];
     Ti.include(v);

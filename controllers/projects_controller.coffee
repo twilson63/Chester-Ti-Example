@@ -7,10 +7,13 @@ class ProjectsController extends Chester.Controller
     @find('new').render params
     
   _create: (params) ->
+    Ti.API.info 'Create Called'
     params.project: @parent.Models._('Project')._create params.project
     if params.project.errors
+      Ti.API.info 'Render New'
       @find('new').render params
     else
+      Ti.API.info 'Render Show'
       @find('show').render params
 
   _show: (params) ->

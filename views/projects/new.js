@@ -24,7 +24,7 @@
       style: Titanium.UI.iPhone.TableViewStyle.GROUPED
     });
     this.p_text_row(new_project_view, 'Name', 'New Project');
-    this.p_text_row(new_project_view, 'Description');
+    //@p_text_row(new_project_view, 'Description')
     this.p_button(new_project_view, 'Create Project');
     detail_view.add(new_project_view);
     this.clientWin = new_project_view;
@@ -40,17 +40,20 @@
       height: 40
     });
     btnCreate.addEventListener('click', __bind(function() {
-        Ti.API.info('This Rocks');
+        Ti.API.info('This Rocks ' + this.txName.value);
         return this.parent.parent.run({
           controller: 'ProjectsController',
           action: '_create',
           params: {
-            clientWin: this.clientWin
+            clientWin: this.clientWin,
+            project: {
+              name: this.txName.value
+            }
           }
         });
       }, this));
     row.add(btnCreate);
-    return tb.add(row);
+    return tb.appendRow(row);
   };
   ProjectsNew.prototype.p_text_row = function p_text_row(tb, name, header) {
     var row, txField;
@@ -60,6 +63,7 @@
       right: 0,
       hintText: 'Required'
     });
+    this['tx' + name] = txField;
     row.add(txField);
     return tb.appendRow(row);
   };
@@ -72,6 +76,7 @@
       height: 300,
       hintText: 'Required'
     });
+    row.height = 300;
     row.add(txArea);
     return tb.appendRow(row);
   };

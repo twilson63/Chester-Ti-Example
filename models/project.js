@@ -1,11 +1,12 @@
 (function(){
   var Project;
-  Project = function Project() {
+  Project = function Project(name) {
+    this.name = name;
     this.db = Ti.Database.open('project_app');
     this.db.execute('CREATE TABLE IF NOT EXISTS PROJECTS  (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT)');
+    Ti.API.info('Opened Database!');
     return this;
   };
-  Project.prototype.name = 'Project';
   Project.prototype._all = function _all() {
     // Get All Records
     return this.db.execute('SELECT * FROM PROJECTS');
@@ -15,8 +16,11 @@
     return this.db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id);
   };
   Project.prototype._create = function _create(project) {
-    // create Record
-    return this.db.execute('INSERT INTO PROJECTS (NAME) VALUES (?)', project.name);
+    this.db.execute('INSERT INTO PROJECTS (NAME) VALUES (?)', project.name);
+    Ti.API.info('Added Project');
+    return project;
+    //results: @db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id)
+    //Ti.API.info results
   };
   Project.prototype._update = function _update(project) {
     return this.db.execute('UPDATE PROJECTS SET NAME = ? WHERE ID = ?', project.name, project.id);

@@ -9,7 +9,7 @@ class ProjectsNew extends Chester.View
     })
     
     @p_text_row(new_project_view, 'Name', 'New Project')
-    @p_text_row(new_project_view, 'Description')
+    #@p_text_row(new_project_view, 'Description')
     @p_button(new_project_view, 'Create Project')
     
     detail_view.add(new_project_view)
@@ -24,17 +24,18 @@ class ProjectsNew extends Chester.View
       width: 125,
       height: 40
     })
+    
     btnCreate.addEventListener('click', =>
-      Ti.API.info 'This Rocks'
+      Ti.API.info 'This Rocks ' + @txName.value
       @parent.parent.run({ 
         controller: 'ProjectsController',
         action: '_create',
-        params: { clientWin: @clientWin}
+        params: { clientWin: @clientWin, project: { name: @txName.value }}
           
       })
     )
     row.add(btnCreate)
-    tb.add(row)
+    tb.appendRow(row)
     
   p_text_row: (tb, name, header) ->
     row: @p_create_row(name, header)
@@ -44,6 +45,7 @@ class ProjectsNew extends Chester.View
       right: 0,
       hintText: 'Required'
     })
+    this['tx' + name]: txField
     
     row.add(txField)
     tb.appendRow(row)
@@ -57,7 +59,7 @@ class ProjectsNew extends Chester.View
       height: 300,
       hintText: 'Required'
     })
-    
+    row.height: 300
     row.add(txArea)
     tb.appendRow(row)
     

@@ -11,7 +11,7 @@ class ProjectsIndex extends Chester.View
     # Add Projects to list
     scroll_view: @p_project_summary()
     
-    #@p_add_row(options.projects, project_list) while (options.projects.isValidRow())
+    @p_add_row(options.projects, project_list) while (options.projects.isValidRow())
     project_list.appendRow(Ti.UI.createTableViewRow({
       title: 'Create New Project',
       project_id: -1,
@@ -34,11 +34,12 @@ class ProjectsIndex extends Chester.View
     true
 
   p_add_row: (rows, view) ->
+    Ti.API.info rows.fieldByName('NAME')
     view_row: Ti.UI.createTableViewRow {
       title: rows.fieldByName('NAME'),
       project_id: rows.fieldByName('ID')
     }
-    view.add(view_row)
+    view.appendRow(view_row)
     rows.next()
   
   p_project_summary: ->

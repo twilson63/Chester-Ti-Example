@@ -28,7 +28,9 @@
     });
     // Add Projects to list
     scroll_view = this.p_project_summary();
-    //@p_add_row(options.projects, project_list) while (options.projects.isValidRow())
+    while ((options.projects.isValidRow())) {
+      this.p_add_row(options.projects, project_list);
+    }
     project_list.appendRow(Ti.UI.createTableViewRow({
       title: 'Create New Project',
       project_id: -1,
@@ -50,11 +52,12 @@
   };
   ProjectsIndex.prototype.p_add_row = function p_add_row(rows, view) {
     var view_row;
+    Ti.API.info(rows.fieldByName('NAME'));
     view_row = Ti.UI.createTableViewRow({
       title: rows.fieldByName('NAME'),
       project_id: rows.fieldByName('ID')
     });
-    view.add(view_row);
+    view.appendRow(view_row);
     return rows.next();
   };
   ProjectsIndex.prototype.p_project_summary = function p_project_summary() {
