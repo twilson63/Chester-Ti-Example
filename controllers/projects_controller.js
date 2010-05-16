@@ -12,7 +12,7 @@
   };
   __extends(ProjectsController, Chester.Controller);
   ProjectsController.prototype._index = function _index(params) {
-    params.projects = Chester._('app').Models._('Project')._all();
+    params.projects = this.parent.Models._('Project')._all();
     return this.find('index').render(params);
   };
   ProjectsController.prototype._new = function _new(params) {

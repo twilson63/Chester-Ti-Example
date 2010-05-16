@@ -8,10 +8,21 @@ class ProjectsContainer
         window: @window
       }),
       masterView: Ti.UI.iPhone.createNavigationGroup({
-        window: @window
+        window: @window,
+        top: 40
       })
     })
     @sv.masterView.add @project_list
+    
+    @sv.addEventListener('visible', (e) =>
+      if e.view is 'detail'
+        e.button.title: 'Projects'
+        @window.leftNavButton: e.button
+        
+      else if e.view is 'master'
+        @window.leftNavButton: null
+    )
+    
     
 root: exports ? this
 

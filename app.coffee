@@ -2,6 +2,7 @@
 Ti.include 'init.js'
 # Create Main Wi# Create Container View
 Chester._('app').container: new ProjectContainer()
+
 # Run App  
 Chester._('app').run({
   controller: 'ProjectsController',
@@ -11,3 +12,4 @@ Chester._('app').run({
 
 # Open Window
 Chester._('app').container.sv.open()
+
