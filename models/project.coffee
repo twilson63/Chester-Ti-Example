@@ -6,25 +6,35 @@ class Project
     Ti.API.info 'Opened Database!'
     
   _all: ->
+    @projects: []
     # Get All Records
-    @db.execute('SELECT * FROM PROJECTS')
+    rows: @db.execute('SELECT * FROM PROJECTS')
+    @p_add_to_projects(rows) while (rows.isValidRow())
+    rows.close()
+    @projects
     
   _find_by_id: (id) ->
     # Get model record by id
-    @db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id)
+    rows: @db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id)
+    @current_project: { name: rows.fieldByName('NAME'), id: rows.fieldByName('ID')}
+    rows.close()
+    @current_project
     
   _create: (project) ->
     @db.execute('INSERT INTO PROJECTS (NAME) VALUES (?)', project.name)
-    Ti.API.info 'Added Project'
-    project
-    #results: @db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id)
-    #Ti.API.info results
+    { id: @db.lastInsertRowId, name: project.name }
     
   _update: (project) ->
     @db.execute('UPDATE PROJECTS SET NAME = ? WHERE ID = ?', project.name, project.id)
+    @_find_by_id(project.id)
     
   _delete: (project) ->
     @db.execute('DELETE FROM PROJECTS WHERE ID = ?', project.id)
+  
+  p_add_to_projects: (rows) ->
+    @projects[@projects.length]: { project: { name: rows.fieldByName('NAME'), id: rows.fieldByName('ID')}}
+    rows.next()
+    
     
   
 Chester._('app').Models.add(new Project('Project'))

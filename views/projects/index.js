@@ -16,49 +16,57 @@
   };
   __extends(ProjectsIndex, Chester.View);
   ProjectsIndex.prototype.render = function render(options) {
-    var detail_view, master_view, project_list, scroll_view;
+    var _a, _b, _c, detail_view, master_view, obj, scroll_view;
     // remove current project list
     master_view = this.parent.parent.container.sv.masterView;
     detail_view = this.parent.parent.container.sv.detailView;
     //project_list: @parent.parent.container.project_list
     //master_view.remove project_list
     // Create New Project List
-    project_list = Ti.UI.createTableView({
+    this.project_list = Ti.UI.createTableView({
       top: 40
     });
     // Add Projects to list
     scroll_view = this.p_project_summary();
-    while ((options.projects.isValidRow())) {
-      this.p_add_row(options.projects, project_list);
-    }
-    project_list.appendRow(Ti.UI.createTableViewRow({
-      title: 'Create New Project',
-      project_id: -1,
-      scroll_view: scroll_view
+    this.parent.parent.current = scroll_view;
+    this.project_list.appendRow(Ti.UI.createTableViewRow({
+      title: '... Create New Project ...',
+      project_id: -1
     }));
-    master_view.add(project_list);
-    project_list.addEventListener('click', __bind(function(e) {
+    _b = options.projects;
+    for (_a = 0, _c = _b.length; _a < _c; _a++) {
+      obj = _b[_a];
+      this.p_add_row(obj.project, this.project_list);
+    }
+    master_view.add(this.project_list);
+    this.project_list.addEventListener('click', __bind(function(e) {
+        this.parent.parent.container.sv.detailView.remove(this.parent.parent.current);
         e.source.project_id === -1 ? this.parent.parent.run({
           controller: 'ProjectsController',
           action: '_new',
+          params: {}
+        }) : this.parent.parent.run({
+          controller: 'ProjectsController',
+          action: '_show',
           params: {
-            clientWin: e.source.scroll_view
+            project_id: e.source.project_id
           }
-        }) : null;
+        });
         return true;
       }, this));
     detail_view.add(scroll_view);
     return true;
   };
-  ProjectsIndex.prototype.p_add_row = function p_add_row(rows, view) {
+  ProjectsIndex.prototype.add_project = function add_project(project) {
+    return this.p_add_row(project, this.project_list);
+  };
+  ProjectsIndex.prototype.p_add_row = function p_add_row(project, view) {
     var view_row;
-    Ti.API.info(rows.fieldByName('NAME'));
     view_row = Ti.UI.createTableViewRow({
-      title: rows.fieldByName('NAME'),
-      project_id: rows.fieldByName('ID')
+      title: project.name,
+      project_id: project.id
     });
-    view.appendRow(view_row);
-    return rows.next();
+    return view.appendRow(view_row);
   };
   ProjectsIndex.prototype.p_project_summary = function p_project_summary() {
     var welcome;

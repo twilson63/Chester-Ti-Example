@@ -7,40 +7,52 @@ class ProjectsIndex extends Chester.View
     #master_view.remove project_list
     
     # Create New Project List
-    project_list: Ti.UI.createTableView({ top: 40 })
+    @project_list: Ti.UI.createTableView({ top: 40 })
     # Add Projects to list
     scroll_view: @p_project_summary()
-    
-    @p_add_row(options.projects, project_list) while (options.projects.isValidRow())
-    project_list.appendRow(Ti.UI.createTableViewRow({
-      title: 'Create New Project',
-      project_id: -1,
-      scroll_view: scroll_view
+    @parent.parent.current: scroll_view
+
+
+    @project_list.appendRow(Ti.UI.createTableViewRow({
+      title: '... Create New Project ...',
+      project_id: -1
     }))    
     
+    for obj in options.projects
+      @p_add_row(obj.project, @project_list) 
     
-    master_view.add(project_list)
-    project_list.addEventListener('click', (e) =>
+    master_view.add(@project_list)
+    
+    @project_list.addEventListener('click', (e) =>
+      @parent.parent.container.sv.detailView.remove(@parent.parent.current)
       if e.source.project_id is -1
         @parent.parent.run({
           controller: 'ProjectsController',
           action: '_new',
-          params: { clientWin: e.source.scroll_view }
+          params: {  }
         })
+      else
+        @parent.parent.run({
+          controller: 'ProjectsController',
+          action: '_show',
+          params: { project_id: e.source.project_id }
+        })
+        
       true
     )
     
     detail_view.add(scroll_view)
     true
 
-  p_add_row: (rows, view) ->
-    Ti.API.info rows.fieldByName('NAME')
+  add_project: (project) ->
+    @p_add_row(project, @project_list)
+  
+  p_add_row: (project, view) ->
     view_row: Ti.UI.createTableViewRow {
-      title: rows.fieldByName('NAME'),
-      project_id: rows.fieldByName('ID')
+      title: project.name,
+      project_id: project.id
     }
     view.appendRow(view_row)
-    rows.next()
   
   p_project_summary: ->
     welcome: Ti.UI.createScrollView({ backgroundColor: '#fff', top: 40 })

@@ -19,18 +19,18 @@
     return this.find('new').render(params);
   };
   ProjectsController.prototype._create = function _create(params) {
-    Ti.API.info('Create Called');
     params.project = this.parent.Models._('Project')._create(params.project);
     if (params.project.errors) {
-      Ti.API.info('Render New');
       return this.find('new').render(params);
     } else {
+      Ti.API.info('Add to List');
+      this.find('index').add_project(params.project);
       Ti.API.info('Render Show');
       return this.find('show').render(params);
     }
   };
   ProjectsController.prototype._show = function _show(params) {
-    params.project = this.parent.Models._('Project')._find_by_id(params.project.id);
+    params.project = this.parent.Models._('Project')._find_by_id(params.project_id);
     return this.find('show').render(params);
   };
   ProjectsController.prototype._edit = function _edit(params) {

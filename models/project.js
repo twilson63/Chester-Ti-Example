@@ -8,25 +8,49 @@
     return this;
   };
   Project.prototype._all = function _all() {
+    var rows;
+    this.projects = [];
     // Get All Records
-    return this.db.execute('SELECT * FROM PROJECTS');
+    rows = this.db.execute('SELECT * FROM PROJECTS');
+    while ((rows.isValidRow())) {
+      this.p_add_to_projects(rows);
+    }
+    rows.close();
+    return this.projects;
   };
   Project.prototype._find_by_id = function _find_by_id(id) {
+    var rows;
     // Get model record by id
-    return this.db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id);
+    rows = this.db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id);
+    this.current_project = {
+      name: rows.fieldByName('NAME'),
+      id: rows.fieldByName('ID')
+    };
+    rows.close();
+    return this.current_project;
   };
   Project.prototype._create = function _create(project) {
     this.db.execute('INSERT INTO PROJECTS (NAME) VALUES (?)', project.name);
-    Ti.API.info('Added Project');
-    return project;
-    //results: @db.execute('SELECT * FROM PROJECTS WHERE ID = ?', id)
-    //Ti.API.info results
+    return {
+      id: this.db.lastInsertRowId,
+      name: project.name
+    };
   };
   Project.prototype._update = function _update(project) {
-    return this.db.execute('UPDATE PROJECTS SET NAME = ? WHERE ID = ?', project.name, project.id);
+    this.db.execute('UPDATE PROJECTS SET NAME = ? WHERE ID = ?', project.name, project.id);
+    return this._find_by_id(project.id);
   };
   Project.prototype._delete = function _delete(project) {
     return this.db.execute('DELETE FROM PROJECTS WHERE ID = ?', project.id);
+  };
+  Project.prototype.p_add_to_projects = function p_add_to_projects(rows) {
+    this.projects[this.projects.length] = {
+      project: {
+        name: rows.fieldByName('NAME'),
+        id: rows.fieldByName('ID')
+      }
+    };
+    return rows.next();
   };
   Chester._('app').Models.add(new Project('Project'));
 })();

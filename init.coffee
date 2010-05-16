@@ -8,5 +8,5 @@ for c in ['controllers/projects_controller.js']
   Ti.include c
     
 prj_views: 'views/projects/'  
-for v in [prj_views + 'index.js', prj_views + 'new.js', prj_views + 'show.js']
+for v in [prj_views + 'index.js', prj_views + 'new.js', prj_views + 'show.js', prj_views + 'edit.js']
   Ti.include v  
